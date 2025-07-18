@@ -1,0 +1,26 @@
+name: Deploy K8s App via GitOps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'k8s/**'
+
+jobs:
+  update-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "ci@github.com"
+
+      - name: Commit & push (if needed)
+        run: |
+          git add k8s/
+          git commit -m "Update K8s manifests" || echo "No changes to commit"
+          git push origin main
